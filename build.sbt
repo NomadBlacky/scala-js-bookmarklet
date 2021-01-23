@@ -11,6 +11,12 @@ ThisBuild / organizationName := "NomadBlacky"
 lazy val buildBookmarklet = taskKey[File]("Build the bookmarklet.")
 lazy val openBookmarklet  = taskKey[Unit]("Open the bookmarklet in your browser.")
 
+def getBundleJS(files: Seq[sbt.Attributed[File]]): File =
+  files
+    .find(attr => attr.data.name.endsWith("-bundle.js"))
+    .map(attr => attr.data)
+    .getOrElse(sys.error("bundle.js file is not found."))
+
 lazy val root = (project in file("."))
   .enablePlugins(ScalaJSPlugin, ScalaJSBundlerPlugin)
   .settings(
@@ -22,12 +28,13 @@ lazy val root = (project in file("."))
       "org.scalatest"                 %%% "scalatest"   % "3.2.3" % Test
     ),
     buildBookmarklet := {
-      (Compile / fullOptJS).result.value match {
+      (Compile / fullOptJS / webpack).result.value match {
         case Inc(cause) =>
           throw cause
         case Value(value) =>
-          val f = file("bookmarklet.js")
-          Using.resources(Source.fromFile(value.data), new PrintWriter(f)) { (source, pw) =>
+          val f        = file("bookmarklet.js")
+          val bundleJS = getBundleJS(value)
+          Using.resources(Source.fromFile(bundleJS), new PrintWriter(f)) { (source, pw) =>
             val script = source.mkString
             val encoded = URLEncoder
               .encode(script, "UTF-8")
