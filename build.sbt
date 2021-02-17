@@ -24,7 +24,7 @@ lazy val root = (project in file("."))
     scalaJSUseMainModuleInitializer := true,
     libraryDependencies ++= Seq(
       "org.scala-js"                  %%% "scalajs-dom" % "1.1.0",
-      "com.softwaremill.sttp.client3" %%% "core"        % "3.0.0",
+      "com.softwaremill.sttp.client3" %%% "core"        % "3.1.2",
       "org.scalatest"                 %%% "scalatest"   % "3.2.3" % Test
     ),
     buildBookmarklet := {
