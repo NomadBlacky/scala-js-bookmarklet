@@ -25,7 +25,7 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(
       "org.scala-js"                  %%% "scalajs-dom" % "1.1.0",
       "com.softwaremill.sttp.client3" %%% "core"        % "3.0.0",
-      "org.scalatest"                 %%% "scalatest"   % "3.2.3" % Test
+      "org.scalatest"                 %%% "scalatest"   % "3.2.4" % Test
     ),
     buildBookmarklet := {
       (Compile / fullOptJS / webpack).result.value match {
